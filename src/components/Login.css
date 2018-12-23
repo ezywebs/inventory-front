@@ -1,0 +1,33 @@
+@media all and (min-width: 480px) {
+  .Login {
+    padding: 60px 0;
+  }
+
+  .Login form {
+    margin: 0 auto;
+    max-width: 320px;
+  }
+  
+  .error {
+      border-color: red;
+  }
+  
+  .form-group{
+    position:relative;
+ }
+
+ .glyphicon-remove{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    right: 0;
+    color: red;
+ }
+  .glyphicon-ok{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 65%;
+    right: 0;
+    color: green;
+ }
+}
