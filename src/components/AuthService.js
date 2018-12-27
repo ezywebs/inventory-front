@@ -1,9 +1,7 @@
 import {API_URL} from "../config";
 
 export default class AuthService {
-    // Initializing important variables
     constructor() {
-      //this.domain = domain || 'http://localhost:8080' // API server domain
       this.fetch = this.fetch.bind(this) // React binding stuff
       this.login = this.login.bind(this)
       this.getProfile = this.getProfile.bind(this)
@@ -19,7 +17,7 @@ export default class AuthService {
               grant_type: "password"
           })
       }).then(res => {
-          this.setToken(res.access_token, res.created_at + res.expires_in) // Setting the token in localStorage
+          this.setToken(res.access_token, res.created_at + res.expires_in, res.result.email) // Setting the token in localStorage
           return Promise.resolve(res);
       })
     }
@@ -44,21 +42,23 @@ export default class AuthService {
       }
     }
 
-    setToken(idToken, expiration) {
+    setToken(idToken, expiration, username) {
       // Saves user token to localStorage
       localStorage.setItem('id_token', idToken)
       localStorage.setItem('token_exp', expiration)
+      localStorage.setItem('username', username)
     }
 
     getToken() {
       // Retrieves the user token from localStorage
-      return {token: localStorage.getItem('id_token'), expiration: localStorage.getItem('token_exp')}
+      return {token: localStorage.getItem('id_token'), expiration: localStorage.getItem('token_exp'), username: localStorage.getItem('username')}
     }
 
     logout() {
       // Clear user token and profile data from localStorage
       localStorage.removeItem('id_token');
       localStorage.removeItem('token_exp');
+      localStorage.removeItem('username');
     }
 
     getProfile() {

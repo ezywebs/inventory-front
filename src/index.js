@@ -4,12 +4,8 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import App from "./App";
 import Login from "./components/Login";
 import NotFound from "./components/common/NotFound";
+import Routes from "./Routes";
 
 ReactDOM.render(
-  <Router>
-      <div>
-        <Route exact path='/' component={App} />
-        <Route exact path="/login" component={Login} />
-      </div>
-  </Router>,
+  <Routes />,
   document.getElementById('root'))

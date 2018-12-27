@@ -1,7 +1,8 @@
-import React from "react"
-import Loading from "components/Loading"
+import React, { Component } from "react";
+import Loading from "./common/Loading"
+import {API_URL} from "../config";
 
-class Category extends React.Component {
+class Category extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,7 +22,7 @@ class Category extends React.Component {
     }
     this.setState({ loading: true });
     let category = {id: this.props.category.id, name: this.refs.name.value};
-    fetch("/api/v1/categories/" + category.id, {
+    fetch(API_URL+"/categories/" + category.id, {
       method: "PUT",
       body: JSON.stringify({category: { name: category.name }}),
       headers: {

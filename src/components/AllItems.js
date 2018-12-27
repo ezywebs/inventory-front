@@ -1,7 +1,7 @@
-import React from "react"
-import Category from "components/Category"
+import React, { Component } from "react";
+import Category from "./Category"
 
-class AllItems extends React.Component {
+class AllItems extends Component {
   render () {
     let categories = this.props.categories.map((category) => {
       return (

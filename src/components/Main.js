@@ -1,13 +1,10 @@
-import React from "react"
-import PropTypes from "prop-types"
-import Body from "components/Body"
+import React, { Component } from "react"
 
-class Main extends React.Component {
+class Main extends Component {
   render () {
     return (
       <div>
-        <h1>Hello, World Main!</h1>
-        <Body />
+        <h1>Welcome to Inventory App</h1>
       </div>
     );
   }

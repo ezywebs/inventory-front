@@ -2,24 +2,27 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Nav, Navbar, NavItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import "./App.css";
-import Routes from "./Routes";
-import { BrowserRouter as Router, Route, withRouter, Switch } from "react-router-dom";
-import NotFound from "./components/common/NotFound";
-import Login from "./components/Login";
-import Body from "./components/Body"
-import AuthService from './components/AuthService';
-import withAuth from './components/withAuth';
+
+import AuthService from './AuthService';
 const Auth = new AuthService();
 
 
-class App extends Component {
-  
+class Navigation extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: null
+    }
+  }
   handleLogout(){
     Auth.logout()
     this.props.history.replace('/login');
   }
-  
+  componentDidUpdate() {
+    if (!this.state.user && Auth.loggedIn()){
+      this.setState({ user: Auth.getProfile() })
+    }
+  }
   render() {
     return (
       <div className="App container">
@@ -37,10 +40,22 @@ class App extends Component {
               </LinkContainer>
             </Nav>
             <Nav pullRight>
-              <NavItem>{this.props.user.username}</NavItem>
-              <LinkContainer to="/login">
-                <NavItem onClick={this.handleLogout.bind(this)}>Logout</NavItem>
+            {
+              this.state.user ? 
+              <NavItem>{this.state.user.username}</NavItem> : 
+              <LinkContainer to="/signup">
+                <NavItem>Sign Up</NavItem>
               </LinkContainer>
+            }
+            {
+              this.state.user ? 
+              <LinkContainer to="/login">
+                <NavItem onClick={this.handleLogout.bind(this)}>Log Out</NavItem>
+              </LinkContainer> : 
+              <LinkContainer to="/login">
+                <NavItem>Log In</NavItem>
+              </LinkContainer>
+            }
             </Nav>
           </Navbar.Collapse>
         </Navbar>
@@ -49,4 +64,4 @@ class App extends Component {
   }
 }
 
-export default withAuth(App);
+export default Navigation;

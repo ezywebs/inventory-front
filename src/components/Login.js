@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
+import { Button, FormGroup, FormControl, ControlLabel, Alert, Grid, Row, Col } from "react-bootstrap";
 import "./Login.css";
 import { validateEmail, handleResponse } from "../helpers";
 import {API_URL} from "../config";
 import AuthService from './AuthService';
+import Loading from "../components/common/Loading"
 
 export default class Login extends Component {
   constructor(props) {
@@ -12,7 +13,9 @@ export default class Login extends Component {
     this.state = {
       email: "",
       password: "",
-      email_err: false
+      email_err: false,
+      fail: false,
+      loading: false
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.Auth = new AuthService();
@@ -52,29 +55,15 @@ export default class Login extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
+    this.setState({loading: true});
     const {email, password} = this.state;
-    
-    // fetch(`${API_URL}/oauth/token`, {
-    //     method: "POST",
-    //     body: JSON.stringify({email: email, password: password, grant_type: "password"}),
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     }
-    //   })
-    //   .then(handleResponse)
-    //   .then(data => { 
-    //     alert('success');
-    //   })
-    //   .catch(error => {
-        
-    //   });
-      
+
     this.Auth.login(email,password)
       .then(res =>{
-         this.props.history.replace('/');
+        this.props.history.replace('/');
       })
       .catch(err =>{
-          alert(err);
+        this.setState({fail: true, loading: false})
       })
   }
   
@@ -84,8 +73,22 @@ export default class Login extends Component {
   }
 
   render() {
+    if (this.state.loading) {
+      return (
+        <Grid style={{marginTop: "50px"}}>
+          <Row>
+            <Col md={2} mdOffset={5}>
+              <Loading width={"50px"} height={"50px"} />
+            </Col>
+          </Row>
+        </Grid>
+      )
+    }
     return (
       <div className="Login">
+        <Grid>
+          { this.state.fail && <Alert bsStyle="danger">Icorrect email or password</Alert> } 
+        </Grid>
         <form onSubmit={this.handleSubmit}>
           <FormGroup controlId="email" bsSize="large" className={this.state.email_err ? "has-error" : ""}>
             <ControlLabel>Email</ControlLabel>
