@@ -7,7 +7,6 @@ import Routes from "./Routes";
 import { BrowserRouter as Router, Route, withRouter, Switch } from "react-router-dom";
 import NotFound from "./components/common/NotFound";
 import Login from "./components/Login";
-import Body from "./components/Body"
 import AuthService from './components/AuthService';
 import withAuth from './components/withAuth';
 const Auth = new AuthService();

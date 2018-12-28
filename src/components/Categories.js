@@ -9,7 +9,7 @@ import AuthService from './AuthService';
 import withAuth from './withAuth';
 const Auth = new AuthService();
 
-class Body extends Component {
+class Categories extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -98,7 +98,7 @@ class Body extends Component {
   }
 
   render () {
-    const { loading, categories, error} = this.state;
+    const { loading, categories, error, user } = this.state;
     if (loading) {
       return <div className="loading-container col-md-4 col-md-offset-4"><Loading /></div>
     }
@@ -108,10 +108,10 @@ class Body extends Component {
           { error && <Alert bsStyle="danger">Error!</Alert> } 
         </Grid>
         <NewCategory handleSubmit={this.handleAdd} />
-        <AllItems categories={categories} handleDelete={this.handleDelete} />
+        <AllItems categories={categories} handleDelete={this.handleDelete} user={ user }/>
       </div>
     );
   }
 }
 
-export default withAuth(Body);
+export default withAuth(Categories);

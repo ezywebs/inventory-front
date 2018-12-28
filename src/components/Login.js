@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { Button, FormGroup, FormControl, ControlLabel, Alert, Grid, Row, Col } from "react-bootstrap";
 import "./Login.css";
-import { validateEmail, handleResponse } from "../helpers";
+import { validateEmail, handleResponse, validateField } from "../helpers";
 import {API_URL} from "../config";
 import AuthService from './AuthService';
 import Loading from "../components/common/Loading"
+import Input from "../components/common/Input"
 
 export default class Login extends Component {
   constructor(props) {
@@ -13,7 +14,10 @@ export default class Login extends Component {
     this.state = {
       email: "",
       password: "",
-      email_err: false,
+      errors: {
+        email: null, 
+        password: null
+      },
       fail: false,
       loading: false
     };
@@ -21,36 +25,41 @@ export default class Login extends Component {
     this.Auth = new AuthService();
   }
 
-  validateEmailField = (email) => {
-    return validateEmail(email);
-  }
+  // validateEmailField = (email, type) => {
+  //   return validateField(email, type);
+  // }
   
-  validateErrors = (email) => {
-    if (!this.validateEmailField(email) && email !== "") {
+  validateErrors = (email, type) => {
+    if (!validateField(email, type) && email !== "") {
       this.setState({
-        email_err: true
+        errors: { 
+          [type]: "Incorrect email format" 
+        }
       });
     }
     else {
       this.setState({
-        email_err: false
+        errors: { [type]: null }
       });
     }
+    
   }
 
   validateForm = () => {
-    return this.validateEmailField(this.state.email) && this.state.password.length > 0;
+    // return this.validateEmailField(this.state.email) && this.state.password.length > 0;
+    return this.state.errors.email && this.state.errors.password;
   }
 
-  handleEmailChange = event => {
-    this.handleChange(event);
-    this.validateErrors(event.target.value);
-  }
+  // handleEmailChange = event => {
+  //   this.handleChange(event);
+  //   this.validateErrors(event.target.value, event.target.type);
+  // }
 
   handleChange = event => {
     this.setState({
       [event.target.id]: event.target.value
     });
+    this.validateErrors(event.target.value, event.target.type);
   }
 
   handleSubmit = event => {
@@ -86,32 +95,29 @@ export default class Login extends Component {
     }
     return (
       <div className="Login">
-        <Grid>
-          { this.state.fail && <Alert bsStyle="danger">Icorrect email or password</Alert> } 
-        </Grid>
         <form onSubmit={this.handleSubmit}>
-          <FormGroup controlId="email" bsSize="large" className={this.state.email_err ? "has-error" : ""}>
-            <ControlLabel>Email</ControlLabel>
-            <FormControl
-              autoFocus
-              type="email"
-              value={this.state.email}
-              onChange={this.handleEmailChange}
-            />
-            { 
-              this.state.email !== "" 
-              && <span className={this.state.email_err ? "glyphicon glyphicon-remove cross" : "glyphicon glyphicon-ok cross"} aria-hidden="true"></span>
-            }
-            <span className="help-block">{this.state.email_err ? "Please check your email and try again" : ""}</span>
-          </FormGroup>
-          <FormGroup controlId="password" bsSize="large">
-            <ControlLabel>Password</ControlLabel>
-            <FormControl
-              value={this.state.password}
-              onChange={this.handleChange}
-              type="password"
-            />
-          </FormGroup>
+          { this.state.fail && <Alert bsStyle="danger">Icorrect email or password</Alert> } 
+          <Input 
+            value={this.state.email} 
+            handleChange={this.handleChange} 
+            type="email" 
+            title="Email" 
+            id="email" 
+            size="large" 
+            isAutoFocus={true}
+            placeholder="your-email@domain.com" 
+            errorMessage={this.state.errors.email}
+          />
+          <Input 
+            value={this.state.password} 
+            handleChange={this.handleChange} 
+            type="password" 
+            title="Password"
+            id="password" 
+            size="large" 
+            placeholder="Password" 
+            errorMessage={this.state.errors.password}
+          />
           <Button
             block
             bsSize="large"
@@ -125,3 +131,30 @@ export default class Login extends Component {
     );
   }
 }
+
+
+
+// <FormGroup controlId="email" bsSize="large" className={this.state.email_err ? "has-error" : ""}>
+//             <ControlLabel>Email</ControlLabel>
+//             <FormControl
+//               type="email"
+//               value={this.state.email}
+//               onChange={this.handleEmailChange}
+//             />
+//             { 
+//               this.state.email !== "" 
+//               && <span className={this.state.email_err ? "glyphicon glyphicon-remove cross" : "glyphicon glyphicon-ok cross"} aria-hidden="true"></span>
+//             }
+//             <span className="help-block">{this.state.email_err ? "Please check your email and try again" : ""}</span>
+//           </FormGroup>
+
+
+
+// <FormGroup controlId="password" bsSize="large">
+//             <ControlLabel>Password</ControlLabel>
+//             <FormControl
+//               value={this.state.password}
+//               onChange={this.handleChange}
+//               type="password"
+//             />
+//           </FormGroup>

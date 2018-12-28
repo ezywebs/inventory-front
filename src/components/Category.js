@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Loading from "./common/Loading"
+import { handleResponse, checkStatus } from "../helpers"
 import {API_URL} from "../config";
 
 class Category extends Component {
@@ -26,14 +27,19 @@ class Category extends Component {
       method: "PUT",
       body: JSON.stringify({category: { name: category.name }}),
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + this.props.user.token
       }
-    }).then(response => {
-      return response.json();
-    }).then(data => {
-      this.setState({name: category.name, loading: false});
-      this.toggleEdit();
-    });
+    }).then(handleResponse)
+      .then(data => { 
+        this.setState({name: category.name, loading: false});
+        this.toggleEdit();
+      })
+      .catch(error => {
+        this.setState({
+          loading: false
+        });
+      });
   }
 
   toggleEdit() {

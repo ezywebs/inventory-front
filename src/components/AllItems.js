@@ -5,7 +5,7 @@ class AllItems extends Component {
   render () {
     let categories = this.props.categories.map((category) => {
       return (
-        <Category category={category} handleDelete={this.props.handleDelete} key={category.id}/>
+        <Category category={category} handleDelete={this.props.handleDelete} key={category.id} user={ this.props.user }/>
       )
     });
 
